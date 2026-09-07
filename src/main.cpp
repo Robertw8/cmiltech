@@ -44,12 +44,19 @@ int main() {
     const double horizontalDistance = *horizontalDistanceResult;
     const double euclideanDistance = measureDistance(droneCoords, targetCoords);
     const double accelerationPath = input.accelerationPath;
-    const Coords destinationCoords = calculateDestinationCoords(
-        droneCoords, targetCoords, horizontalDistance, euclideanDistance,
-        accelerationPath);
 
-    std::cout << destinationCoords.x << ", " << destinationCoords.y
-              << std::endl;
+    auto simulationResult =
+        calculateSimulation(droneCoords, targetCoords, accelerationPath,
+                            horizontalDistance, euclideanDistance);
+
+    if (!simulationResult) {
+      std::cerr << "Invalid destination coordinates\n";
+      return 1;
+    }
+
+    const SimulationResult simulation = *simulationResult;
+
+    createOutput(simulation);
 
     return 0;
   } catch (const std::exception &error) {

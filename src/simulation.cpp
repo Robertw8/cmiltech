@@ -146,47 +146,72 @@ calculateHorizontalDistance(const MotionParams &motionParams, double time) {
 
   const double distance = speed * time - term1 + term2 + term3 + term4;
 
-  if (!std::isfinite(distance) || distance < 0) {
+  if (!std::isfinite(distance) || distance <= 0) {
     return std::nullopt;
   }
 
   return distance;
 }
 
-Coords calculateManeuver(const Coords &droneCoords, const Coords &targetCoords,
-                         double accelerationPath, double horizontalDistance,
-                         double euclideanDistance) {
-  double x = targetCoords.x - (targetCoords.x - droneCoords.x) *
-                                  (horizontalDistance + accelerationPath) /
-                                  euclideanDistance;
+Coords calculateIntermediatePoint(const Coords &droneCoords,
+                                  const Coords &targetCoords,
+                                  double accelerationPath,
+                                  double horizontalDistance,
+                                  double euclideanDistance) {
+  const double x =
+      targetCoords.x - (targetCoords.x - droneCoords.x) *
+                           (horizontalDistance + accelerationPath) /
+                           euclideanDistance;
 
-  double y = targetCoords.y - (targetCoords.y - droneCoords.y) *
-                                  (horizontalDistance + accelerationPath) /
-                                  euclideanDistance;
+  const double y =
+      targetCoords.y - (targetCoords.y - droneCoords.y) *
+                           (horizontalDistance + accelerationPath) /
+                           euclideanDistance;
 
   return {x, y};
-};
+}
 
-Coords calculateDestinationCoords(const Coords &droneCoords,
-                                  const Coords &targetCoords,
-                                  double horizontalDistance,
-                                  double euclideanDistance,
-                                  double accelerationPath) {
-  Coords updatedDroneCoords = droneCoords;
+std::optional<Coords> calculateDestinationCoords(const Coords &droneCoords,
+                                                 const Coords &targetCoords,
+                                                 double horizontalDistance,
+                                                 double euclideanDistance) {
 
-  if (horizontalDistance + accelerationPath > euclideanDistance) {
-    updatedDroneCoords =
-        calculateManeuver(droneCoords, targetCoords, accelerationPath,
-                          horizontalDistance, euclideanDistance);
+  if (euclideanDistance <= 0 || !std::isfinite(euclideanDistance)) {
+    return std::nullopt;
   }
 
   const double ratio =
       (euclideanDistance - horizontalDistance) / euclideanDistance;
 
-  double destinationX =
+  const double destinationX =
       droneCoords.x + (targetCoords.x - droneCoords.x) * ratio;
-  double destinationY =
+  const double destinationY =
       droneCoords.y + (targetCoords.y - droneCoords.y) * ratio;
 
-  return {destinationX, destinationY};
+  return Coords{destinationX, destinationY};
+}
+
+std::optional<SimulationResult> calculateSimulation(const Coords &droneCoords,
+                                                    const Coords &targetCoords,
+                                                    double accelerationPath,
+                                                    double horizontalDistance,
+                                                    double euclideanDistance) {
+  auto destinationCoordsResult = calculateDestinationCoords(
+      droneCoords, targetCoords, horizontalDistance, euclideanDistance);
+
+  if (!destinationCoordsResult) {
+    return std::nullopt;
+  }
+
+  const Coords destinationCoords = *destinationCoordsResult;
+
+  if (horizontalDistance + accelerationPath > euclideanDistance) {
+    const Coords intermediatePoint =
+        calculateIntermediatePoint(droneCoords, targetCoords, accelerationPath,
+                                   horizontalDistance, euclideanDistance);
+
+    return SimulationResult{destinationCoords, intermediatePoint};
+  }
+
+  return SimulationResult{destinationCoords};
 }

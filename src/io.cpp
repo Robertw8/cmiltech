@@ -1,4 +1,5 @@
 #include "io.hpp"
+#include "simulation.hpp"
 #include <fstream>
 #include <stdexcept>
 #include <string>
@@ -19,4 +20,20 @@ InputData readInput(const std::string &filename) {
   }
 
   return inputData;
+}
+
+void createOutput(const SimulationResult &simulationResult) {
+  std::ofstream output("output.txt");
+
+  if (!output) {
+    throw std::runtime_error("Cannot create output file");
+  }
+
+  output << simulationResult.destinationCoords.x << ' '
+         << simulationResult.destinationCoords.y << "\n";
+
+  if (simulationResult.intermediatePoint) {
+    output << simulationResult.intermediatePoint->x << ' '
+           << simulationResult.intermediatePoint->y << "\n";
+  }
 }

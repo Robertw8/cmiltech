@@ -9,8 +9,13 @@ std::optional<double> getFlightTime(const MotionParams &motionParams);
 std::optional<double>
 calculateHorizontalDistance(const MotionParams &motionParams, double time);
 
-Coords calculateDestinationCoords(const Coords &droneCoords,
-                                  const Coords &targetCoords,
-                                  double horizontalDistance,
-                                  double euclideanDistance,
-                                  double accelerationPath);
+struct SimulationResult {
+  Coords destinationCoords;
+  std::optional<Coords> intermediatePoint;
+};
+
+std::optional<SimulationResult> calculateSimulation(const Coords &droneCoords,
+                                                    const Coords &targetCoords,
+                                                    double accelerationPath,
+                                                    double horizontalDistance,
+                                                    double euclideanDistance);

@@ -1,4 +1,5 @@
 #pragma once
+#include "simulation.hpp"
 #include <string>
 
 struct InputData {
@@ -16,3 +17,5 @@ struct InputData {
 };
 
 InputData readInput(const std::string &filename);
+
+void createOutput(const SimulationResult &simulationResult);
