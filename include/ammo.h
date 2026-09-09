@@ -1,15 +1,16 @@
 #pragma once
 #include <array>
 #include <string_view>
+using namespace std;
 
 struct Ammo {
-  std::string_view name;
+  string_view name;
   double mass;
   double drag;
   double lift;
 };
 
-inline constexpr std::array<Ammo, 5> ammoList{{
+inline constexpr std::array<Ammo, 5> ammo_list{{
     {"VOG-17", 0.35, 0.07, 0.0},
     {"M67", 0.60, 0.10, 0.0},
     {"RKG-3", 1.20, 0.10, 0.0},
@@ -17,4 +18,4 @@ inline constexpr std::array<Ammo, 5> ammoList{{
     {"GLIDING-RKG", 1.40, 0.10, 1.0},
 }};
 
-const Ammo *findAmmo(const std::string_view &ammoName);
+const Ammo *FindAmmo(const string_view &ammo_name);
