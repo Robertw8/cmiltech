@@ -1,14 +1,11 @@
 #pragma once
 
-struct Coords {
+#include <array>
+#include <cstddef>
+
+struct Position {
   double x;
   double y;
-};
-
-struct CubicCoefficients {
-  double a;
-  double b;
-  double c;
 };
 
 struct MotionParams {
@@ -18,3 +15,10 @@ struct MotionParams {
   double speed;
   double height;
 };
+
+inline constexpr std::size_t kTargetCount = 5;
+inline constexpr std::size_t kTrackPointCount = 60;
+
+using TargetTrack = std::array<Position, kTrackPointCount>;
+using TargetTracks = std::array<TargetTrack, kTargetCount>;
+using TargetPositions = std::array<Position, kTargetCount>;

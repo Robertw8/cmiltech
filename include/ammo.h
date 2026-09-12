@@ -1,10 +1,9 @@
 #pragma once
 #include <array>
 #include <string_view>
-using namespace std;
 
 struct Ammo {
-  string_view name;
+  std::string_view name;
   double mass;
   double drag;
   double lift;
@@ -18,4 +17,4 @@ inline constexpr std::array<Ammo, 5> ammo_list{{
     {"GLIDING-RKG", 1.40, 0.10, 1.0},
 }};
 
-const Ammo *FindAmmo(const string_view &ammo_name);
+const Ammo *FindAmmo(std::string_view ammo_name);
