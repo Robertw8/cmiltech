@@ -55,10 +55,10 @@ int main() {
       return 1;
     }
 
-    const double flight_time = *time_result;
+    const double ammo_flight_time = *time_result;
 
     auto horizontal_distance_result =
-        CalculateHorizontalDistance(motion_params, flight_time);
+        CalculateHorizontalDistance(motion_params, ammo_flight_time);
 
     if (!horizontal_distance_result) {
       std::cerr << "Invalid horizontal distance\n";

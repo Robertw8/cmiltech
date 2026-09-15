@@ -18,6 +18,8 @@ add_executable(cmiltech
     src/simulation/simulation.cc
 
     src/targets/target_tracking.cc
+    src/targets/target_evaluation.cc
+    src/targets/target_selection.cc
 )
 
 target_include_directories(cmiltech PRIVATE include)

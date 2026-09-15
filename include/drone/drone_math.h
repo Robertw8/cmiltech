@@ -1,7 +1,7 @@
 #pragma once
+
 #include "drone_types.h"
 #include "types.h"
-
 #include <optional>
 
 struct TurnResult {
@@ -42,7 +42,19 @@ struct TurnConfig {
   double time_step;
 };
 
-double NormalizeTurn(double turn);
+struct DroneArrivalTimeConfig {
+  const Position &current_position;
+  const Position &firepoint;
+  double attack_speed;
+};
+
+struct SwitchPenaltyConfig {
+  DroneState drone_state;
+  double current_speed;
+  double acceleration;
+  double remaining_turn_angle;
+  double angular_speed;
+};
 
 std::optional<DroneMotionResult>
 CalculateNextDroneMotion(const DroneMotionConfig &config);
@@ -52,3 +64,8 @@ Position CalculateNextDronePosition(const DronePositionConfig &config);
 double CalculateTurnAngle(const TurnAngleConfig &config);
 
 TurnResult CalculateTurn(const TurnConfig &config);
+
+std::optional<double>
+EstimateDroneArrivalTime(const DroneArrivalTimeConfig &config);
+
+std::optional<double> CalculateSwitchPenalty(const SwitchPenaltyConfig &config);

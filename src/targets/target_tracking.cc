@@ -1,4 +1,5 @@
 #include "targets/target_tracking.h"
+#include "types.h"
 
 namespace {
 
@@ -50,4 +51,27 @@ GetTargetPositionsAtTime(const TargetTrackingConfig &config) {
   }
 
   return positions;
+}
+
+std::optional<TargetVelocity>
+CalculateTargetVelocity(const TargetVelocityConfig &config) {
+  if (config.time_step <= 0) {
+    return std::nullopt;
+  }
+
+  const double vx =
+      (config.next_position.x - config.current_position.x) / config.time_step;
+  const double vy =
+      (config.next_position.y - config.current_position.y) / config.time_step;
+
+  return TargetVelocity{vx, vy};
+}
+
+Position PredictTargetPosition(const TargetPredictionConfig &config) {
+  double x =
+      config.current_position.x + config.velocity.vx * config.future_time;
+  double y =
+      config.current_position.y + config.velocity.vy * config.future_time;
+
+  return Position{x, y};
 }

@@ -1,4 +1,5 @@
 #pragma once
+
 #include "types.h"
 #include <optional>
 
@@ -11,10 +12,9 @@ struct SimulationConfig {
   double euclidean_distance;
 };
 
-struct SimulationResult {
+struct Simulation {
   Position firepoint;
   std::optional<Position> intermediate_point;
 };
 
-std::optional<SimulationResult>
-CalculateSimulation(const SimulationConfig &config);
+std::optional<Simulation> CalculateSimulation(const SimulationConfig &config);

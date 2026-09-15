@@ -38,15 +38,14 @@ std::optional<Position> CalculateFirePoint(const SimulationConfig &config) {
 
 } // namespace
 
-std::optional<SimulationResult>
-CalculateSimulation(const SimulationConfig &config) {
+std::optional<Simulation> CalculateSimulation(const SimulationConfig &config) {
   auto firepoint_result = CalculateFirePoint(config);
 
   if (!firepoint_result) {
     return std::nullopt;
   }
 
-  SimulationResult result{
+  Simulation result{
       .firepoint = *firepoint_result,
       .intermediate_point = std::nullopt,
   };

@@ -43,18 +43,17 @@ TargetTracks ReadTargetTracks(const std::string &filename) {
   return target_tracks;
 }
 
-void CreateOutput(const SimulationResult &simulation_result) {
+void CreateOutput(const Simulation &simulation) {
   std::ofstream output("output.txt");
 
   if (!output) {
     throw std::runtime_error("Cannot create output file");
   }
 
-  output << simulation_result.firepoint.x << ' '
-         << simulation_result.firepoint.y << '\n';
+  output << simulation.firepoint.x << ' ' << simulation.firepoint.y << '\n';
 
-  if (simulation_result.intermediate_point) {
-    output << simulation_result.intermediate_point->x << ' '
-           << simulation_result.intermediate_point->y << '\n';
+  if (simulation.intermediate_point) {
+    output << simulation.intermediate_point->x << ' '
+           << simulation.intermediate_point->y << '\n';
   }
 }

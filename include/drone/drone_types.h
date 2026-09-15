@@ -1,4 +1,5 @@
 #pragma once
+
 #include "types.h"
 
 enum class DroneState { STOPPED, ACCELERATING, DECELERATING, TURNING, MOVING };

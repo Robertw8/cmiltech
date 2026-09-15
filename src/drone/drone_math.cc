@@ -1,7 +1,10 @@
 #include "drone/drone_math.h"
+#include "drone/drone_types.h"
+#include "simulation/simulation_math.h"
 #include <algorithm>
 #include <cmath>
 #include <numbers>
+#include <optional>
 
 double NormalizeTurn(double turn) {
   return std::remainder(turn, 2.0 * std::numbers::pi);
@@ -94,4 +97,41 @@ TurnResult CalculateTurn(const TurnConfig &config) {
       .new_direction = new_direction,
       .turn_finished = turn_finished,
   };
+}
+
+std::optional<double>
+EstimateDroneArrivalTime(const DroneArrivalTimeConfig &config) {
+
+  if (config.attack_speed <= 0) {
+    return std::nullopt;
+  }
+
+  const double distance =
+      MeasureDistance(config.current_position, config.firepoint);
+
+  return distance / config.attack_speed;
+}
+
+std::optional<double>
+CalculateSwitchPenalty(const SwitchPenaltyConfig &config) {
+  switch (config.drone_state) {
+  case DroneState::STOPPED:
+    return 0;
+  case DroneState::MOVING:
+  case DroneState::ACCELERATING:
+  case DroneState::DECELERATING:
+    if (config.acceleration <= 0) {
+      return std::nullopt;
+    }
+
+    return config.current_speed / config.acceleration;
+  case DroneState::TURNING:
+    if (config.angular_speed <= 0) {
+      return std::nullopt;
+    }
+
+    return std::abs(config.remaining_turn_angle) / config.angular_speed;
+  }
+
+  return std::nullopt;
 }

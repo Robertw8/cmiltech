@@ -1,4 +1,5 @@
 #pragma once
+
 #include "simulation/simulation.h"
 #include "types.h"
 
@@ -25,4 +26,4 @@ InputData ReadInput(const std::string &filename);
 
 TargetTracks ReadTargetTracks(const std::string &filename);
 
-void CreateOutput(const SimulationResult &simulation_result);
+void CreateOutput(const Simulation &simulation);
